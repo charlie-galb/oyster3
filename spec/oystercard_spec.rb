@@ -27,26 +27,34 @@ describe Oystercard do
       expect(subject).to respond_to(:in_journey?)
     end
 
-    it 'checks in_journey is false by default' do
+    it 'checks in_journey is true' do
       expect(subject.in_journey?).to eq(false)
     end
   end
 
   describe '#touch_in' do
+    let(:station){ double :station }
+
     it 'checks that the touch_in method exists' do
       expect(subject).to respond_to(:touch_in)
     end
 
     it 'checks that touch in changes journey status to true' do
       subject.top_up(1)
-      subject.touch_in
+      subject.touch_in(1)
       expect(subject.in_journey?).to eq(true)
     end
 
     it 'check if the minimum amount is at least £1' do
-      expect { subject.touch_in }.to raise_error "balance is not enough"
+      expect { subject.touch_in 1 }.to raise_error "balance is not enough"
     end
 
+    it 'record the entry at the station' do
+      subject.top_up(1)
+      subject.touch_in(station)
+
+      expect(subject.entry_station).to eq station
+    end
 
   end
 
@@ -56,14 +64,14 @@ describe Oystercard do
     end
     it 'checks the touch out method' do
       subject.top_up(1)
-      subject.touch_in
+      subject.touch_in(1)
       expect{ subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_CHARGE)
     end
   end
 
   it 'expects touch_out to change journey_status to false' do
     subject.top_up(1)
-    subject.touch_in
+    subject.touch_in(1)
     subject.touch_out
     expect(subject.in_journey?).to eq(false)
   end
