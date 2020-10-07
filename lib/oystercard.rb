@@ -1,6 +1,7 @@
 class Oystercard
   BALANCE_LIMIT = 90
   MINIMUM_BALANCE = 1
+  MINIMUM_CHARGE = 1
 
   attr_reader :balance
 
@@ -11,12 +12,7 @@ class Oystercard
 
   def top_up(amount)
     raise 'You cannot have more than £90 in your balance' if @balance + amount > BALANCE_LIMIT
-
     @balance += amount
-  end
-
-  def deduct(deducted_am)
-    @balance -= deducted_am
   end
 
   def in_journey?
@@ -29,6 +25,15 @@ class Oystercard
   end
 
   def touch_out
+    deduct(MINIMUM_CHARGE)
     @journey_status = false
   end
+  
+  private
+
+  def deduct(deducted_am)
+    @balance -= deducted_am
+  end
+
+
 end

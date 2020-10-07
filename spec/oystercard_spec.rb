@@ -22,18 +22,6 @@ describe Oystercard do
     end
   end
 
-  describe '#deduct' do
-    it 'checks out the deducted amount' do
-      expect(subject).to respond_to(:deduct)
-    end
-
-    it { is_expected.to respond_to(:deduct).with(1).argument }
-
-    it 'checks that the amount to deduct is effectively deducted from the balance' do
-      expect {subject.deduct 10 }.to change {subject.balance }.by(-10)
-    end
-  end
-
   describe '#in_journey' do
     it 'checks the class responds to in_journey?' do
       expect(subject).to respond_to(:in_journey?)
@@ -65,6 +53,11 @@ describe Oystercard do
   describe '#touch_out' do
     it 'expects class to respond to touch_out' do
       expect(subject).to respond_to(:touch_out)
+    end
+    it 'checks the touch out method' do
+      subject.top_up(1)
+      subject.touch_in
+      expect{ subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_CHARGE)
     end
   end
 
