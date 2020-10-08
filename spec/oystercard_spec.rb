@@ -1,7 +1,8 @@
 require 'oystercard.rb'
 describe Oystercard do
-  let(:entry_station) { double :station }
-  let(:exit_station) { double :station}
+  # let(:entry_station) { double :station }
+  # let(:exit_station) { double :station}
+  # let(:station) { double :entry_station }
   let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
   
   it 'checks that the oystercard has an initial value of 0' do
@@ -53,8 +54,7 @@ describe Oystercard do
 
     it 'record the entry at the station' do
       subject.top_up(1)
-      subject.touch_in(entry_station)
-      expect(subject.entry_station).to eq entry_station
+      expect { subject.touch_in(:station) }.to change { subject.journey[:entry_station] }.to eq (:station)
     end
   end
 
@@ -67,12 +67,12 @@ describe Oystercard do
       subject.touch_in(1)
       expect{ subject.touch_out 1 }.to change{ subject.balance }.by(-Oystercard::MINIMUM_CHARGE)
     end
-    it 'stores exit station' do
-      subject.top_up(1)
-      subject.touch_in(entry_station)
-      subject.touch_out(exit_station)
-      expect(subject.exit_station).to eq exit_station
-    end
+    # it 'check that is not in journey' do
+    #   subject.top_up(1)
+    #   subject.touch_in(:station)
+    #   subject.touch_out(:station)
+    #   expect(subject).to eq in_journey
+    # end
   end
 
   it 'expects touch_out to change journey status to false' do
@@ -88,11 +88,10 @@ describe Oystercard do
     end
 
     it 'stores a journey' do
-      subject.top_up(1)
-      subject.touch_in(entry_station)
-      subject.touch_out(exit_station)
-      subject.add
-      expect(subject.journeys_history).to include journey
+      subject.top_up(2)
+      subject.touch_in(:station)
+      subject.touch_out(:station)
+      expect(subject.journeys_history).to eq [{:entry_station=>:station, :exit_station=>:station}]
     end
   end
 end
