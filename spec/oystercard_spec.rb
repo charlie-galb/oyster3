@@ -1,5 +1,9 @@
 require 'oystercard.rb'
 describe Oystercard do
+  let(:entry_station) { double :station }
+  let(:exit_station) { double :station}
+  let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
+  
   it 'checks that the oystercard has an initial value of 0' do
     expect(subject.balance).to eq 0
   end
@@ -33,8 +37,6 @@ describe Oystercard do
   end
 
   describe '#touch_in' do
-    let(:station){ double :station }
-
     it 'checks that the touch_in method exists' do
       expect(subject).to respond_to(:touch_in)
     end
@@ -51,11 +53,9 @@ describe Oystercard do
 
     it 'record the entry at the station' do
       subject.top_up(1)
-      subject.touch_in(station)
-
-      expect(subject.entry_station).to eq station
+      subject.touch_in(entry_station)
+      expect(subject.entry_station).to eq entry_station
     end
-
   end
 
   describe '#touch_out' do
@@ -65,15 +65,34 @@ describe Oystercard do
     it 'checks the touch out method' do
       subject.top_up(1)
       subject.touch_in(1)
-      expect{ subject.touch_out }.to change{ subject.balance }.by(-Oystercard::MINIMUM_CHARGE)
+      expect{ subject.touch_out 1 }.to change{ subject.balance }.by(-Oystercard::MINIMUM_CHARGE)
+    end
+    it 'stores exit station' do
+      subject.top_up(1)
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
+      expect(subject.exit_station).to eq exit_station
     end
   end
 
-  it 'expects touch_out to change journey_status to false' do
+  it 'expects touch_out to change journey status to false' do
     subject.top_up(1)
     subject.touch_in(1)
-    subject.touch_out
+    subject.touch_out(1)
     expect(subject.in_journey?).to eq(false)
   end
 
+  describe 'add journeys history' do
+    it 'checks that the array of journeys is empty' do
+      expect(subject.journeys_history).to eq []
+    end
+
+    it 'stores a journey' do
+      subject.top_up(1)
+      subject.touch_in(entry_station)
+      subject.touch_out(exit_station)
+      subject.add
+      expect(subject.journeys_history).to include journey
+    end
+  end
 end
