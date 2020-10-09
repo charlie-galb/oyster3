@@ -75,13 +75,6 @@ describe Oystercard do
     # end
   end
 
-  it 'expects touch_out to change journey status to false' do
-    subject.top_up(1)
-    subject.touch_in(1)
-    subject.touch_out(1)
-    expect(subject.in_journey?).to eq(false)
-  end
-
   describe 'add journeys history' do
     it 'checks that the array of journeys is empty' do
       expect(subject.journeys_history).to eq []

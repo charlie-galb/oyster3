@@ -8,7 +8,7 @@ describe Station do
 
     it 'checks that variable zone was created' do
         number = Station.new('Bank', 'Zone 1')
-        expect(number.zone).to eq 'Zone 1'
+        expect(number.zone).to eq ('Zone 1')
     end
 
 end
