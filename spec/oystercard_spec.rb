@@ -55,6 +55,13 @@ describe Oystercard do
   end
 
   describe 'add journeys history' do
+
+    it 'check touches in create a new journey' do
+      card.top_up(5)
+      expect(Journey).to receive(:new)
+      card.touch_in(:mock_entry)
+    end
+
     it 'checks that the array of journeys is empty' do
       expect(subject.journeys_history).to eq []
     end

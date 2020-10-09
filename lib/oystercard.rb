@@ -1,11 +1,11 @@
-require_relative 'journey'
+require 'journey'
 
 class Oystercard
   BALANCE_LIMIT = 90
   MINIMUM_BALANCE = 1
   MINIMUM_CHARGE = 1
 
-  attr_reader :balance, :journeys_history, :journey, :in_journey
+  attr_reader :balance, :journeys_history, :in_journey
 
   def initialize
     @balance = 0
