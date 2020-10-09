@@ -1,7 +1,7 @@
 require 'oystercard.rb'
 describe Oystercard do
 
-  let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
+  #let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
   let(:mock_entry) { double :mock_entry}
   let(:mock_exit) { double :mock_exit}
 
@@ -57,9 +57,9 @@ describe Oystercard do
   describe 'add journeys history' do
 
     it 'check touches in create a new journey' do
-      card.top_up(5)
+      subject.top_up(5)
       expect(Journey).to receive(:new)
-      card.touch_in(:mock_entry)
+      subject.touch_in(:mock_entry)
     end
 
     it 'checks that the array of journeys is empty' do

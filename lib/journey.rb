@@ -9,6 +9,7 @@ class Journey
         @exit_station = nil
         @in_journey = false
         @journey = {}
+        entry
     end
 
     def in_journey?

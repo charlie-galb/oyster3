@@ -1,4 +1,4 @@
-require 'journey'
+require_relative '../lib/journey.rb'
 
 class Oystercard
   BALANCE_LIMIT = 90
@@ -19,18 +19,17 @@ class Oystercard
 
   def touch_in(station)
     raise "balance is not enough" if @balance < MINIMUM_BALANCE
-    @journey_obj = Journey.new(station)
-    @journey_obj.entry
+    @journey = Journey.new(station)
   end
 
   def touch_out(station)
-    @new_journey.exit
+    @journey.exit(station)
     deduct
     add_journey_to_hist
   end
 
   def add_journey_to_hist
-    @journeys_history << @journey
+    @journeys_history << @journey.journey
   end
 
   private
