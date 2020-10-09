@@ -1,10 +1,10 @@
 require 'oystercard.rb'
 describe Oystercard do
-  # let(:entry_station) { double :station }
-  # let(:exit_station) { double :station}
-  # let(:station) { double :entry_station }
+
   let(:journey){ {entry_station: entry_station, exit_station: exit_station} }
-  
+  let(:mock_entry) { double :mock_entry}
+  let(:mock_exit) { double :mock_exit}
+
   it 'checks that the oystercard has an initial value of 0' do
     expect(subject.balance).to eq 0
   end
@@ -27,34 +27,13 @@ describe Oystercard do
     end
   end
 
-  describe '#in_journey' do
-    it 'checks the class responds to in_journey?' do
-      expect(subject).to respond_to(:in_journey?)
-    end
-
-    it 'checks in_journey is true' do
-      expect(subject.in_journey?).to eq(false)
-    end
-  end
-
   describe '#touch_in' do
     it 'checks that the touch_in method exists' do
       expect(subject).to respond_to(:touch_in)
     end
 
-    it 'checks that touch in changes journey status to true' do
-      subject.top_up(1)
-      subject.touch_in(1)
-      expect(subject.in_journey?).to eq(true)
-    end
-
     it 'check if the minimum amount is at least £1' do
       expect { subject.touch_in 1 }.to raise_error "balance is not enough"
-    end
-
-    it 'record the entry at the station' do
-      subject.top_up(1)
-      expect { subject.touch_in(:station) }.to change { subject.journey[:entry_station] }.to eq (:station)
     end
   end
 
@@ -82,9 +61,10 @@ describe Oystercard do
 
     it 'stores a journey' do
       subject.top_up(2)
-      subject.touch_in(:station)
-      subject.touch_out(:station)
-      expect(subject.journeys_history).to eq [{:entry_station=>:station, :exit_station=>:station}]
+      subject.touch_in(:mock_entry)
+      subject.touch_out(:mock_exit)
+      print subject.journeys_history
+      expect(subject.journeys_history).to eq [{:entry_station=>:mock_entry, :exit_station=>:mock_exit}]
     end
   end
 end
